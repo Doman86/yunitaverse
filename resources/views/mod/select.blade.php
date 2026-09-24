@@ -12,17 +12,17 @@
     <div class="mt-14 grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
         <a href="{{ route('mod.good') }}" class="card group flex flex-col items-center gap-3 p-8">
             <span class="text-3xl transition-transform duration-300 group-hover:scale-125">😊</span>
-            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-night-200">Good</span>
+            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-night-200">{{ __('admin.mood_good') }}</span>
         </a>
 
         <a href="{{ route('mod.normal') }}" class="card group flex flex-col items-center gap-3 p-8">
             <span class="text-3xl transition-transform duration-300 group-hover:scale-125">😐</span>
-            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-night-200">Normal</span>
+            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-night-200">{{ __('admin.mood_normal') }}</span>
         </a>
 
         <a href="{{ route('mod.sad') }}" class="card group flex flex-col items-center gap-3 p-8">
             <span class="text-3xl transition-transform duration-300 group-hover:scale-125">🌙</span>
-            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-night-200">Sad</span>
+            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-night-200">{{ __('admin.mood_sad') }}</span>
         </a>
     </div>
 </section>

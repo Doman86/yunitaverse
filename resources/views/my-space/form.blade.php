@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', ($item ? 'Edit' : 'New') . ' ' . $label . ' — My Space')
+@section('title', ($item ? __('my-space.edit_type', ['type' => $label]) : __('my-space.new_type', ['type' => $label])) . ' — ' . __('common.my_space_area'))
 
 @section('content')
 <header class="mb-8">
     <a href="{{ route('my-space.type', $type) }}" class="text-xs uppercase tracking-widest text-night-600 hover:text-night-300">← {{ $label }}</a>
-    <h1 class="mt-2 font-serif text-3xl">{{ $item ? 'Edit' : 'New' }} {{ strtolower($label) }}</h1>
+    <h1 class="mt-2 font-serif text-3xl">{{ $item ? __('my-space.edit_type', ['type' => strtolower($label)]) : __('my-space.new_type', ['type' => strtolower($label)]) }}</h1>
 </header>
 
 <form method="POST"
@@ -21,7 +21,7 @@
         <div>
             @if($field['type'] !== 'file')
                 <label for="{{ $field['name'] }}" class="text-xs uppercase tracking-widest text-night-500">
-                    {{ $field['label'] }} @if($field['required'])<span class="text-rose-300/70">*</span>@endif
+                    {{ __($field['label']) }} @if($field['required'])<span class="text-rose-300/70">*</span>@endif
                 </label>
             @endif
 
@@ -32,7 +32,7 @@
                 <select id="{{ $field['name'] }}" name="{{ $field['name'] }}"
                     class="mt-2 w-full rounded-xl border border-night-700 bg-night-900 px-4 py-3 text-sm outline-none focus:border-night-400">
                     @foreach($field['options'] as $option)
-                        <option value="{{ $option }}" {{ old($field['name'], $item?->{$field['name']} ?? 'all') === $option ? 'selected' : '' }}>{{ ucfirst($option) }}</option>
+                        <option value="{{ $option }}" {{ old($field['name'], $item?->{$field['name']} ?? 'all') === $option ? 'selected' : '' }}>{{ __("admin.mood_{$option}") }}</option>
                     @endforeach
                 </select>
             @elseif($field['type'] === 'file')
@@ -52,15 +52,15 @@
     @endforeach
 
     <div>
-        <label for="status" class="text-xs uppercase tracking-widest text-night-500">Status</label>
+        <label for="status" class="text-xs uppercase tracking-widest text-night-500">{{ __('admin.status') }}</label>
         <select id="status" name="status" class="mt-2 w-full rounded-xl border border-night-700 bg-night-900 px-4 py-3 text-sm outline-none focus:border-night-400">
-            <option value="published" {{ old('status', $item?->status ?? 'published') === 'published' ? 'selected' : '' }}>Published</option>
-            <option value="draft" {{ old('status', $item?->status) === 'draft' ? 'selected' : '' }}>Draft</option>
+            <option value="published" {{ old('status', $item?->status ?? 'published') === 'published' ? 'selected' : '' }}>{{ __('my-space.published') }}</option>
+            <option value="draft" {{ old('status', $item?->status) === 'draft' ? 'selected' : '' }}>{{ __('my-space.draft') }}</option>
         </select>
     </div>
 
     <button type="submit" class="w-full rounded-xl bg-night-100 py-3 text-sm font-semibold text-night-900 transition-colors hover:bg-white">
-        {{ $item ? 'Save changes' : 'Create' }}
+        {{ $item ? __('my-space.save_changes') : __('my-space.create') }}
     </button>
 </form>
 @endsection

@@ -16,7 +16,7 @@
         @foreach($categories as $key => $label)
             @continue(! $favorites->has($key))
             <section class="mb-12">
-                <h2 class="mb-5 font-serif text-2xl text-night-200">{{ $label }}</h2>
+                <h2 class="mb-5 font-serif text-2xl text-night-200">{{ __("admin.{$label}") }}</h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     @foreach($favorites->get($key) as $favorite)
                         <article class="card p-5">

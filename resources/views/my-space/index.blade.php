@@ -19,19 +19,19 @@
 
 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
     @foreach([
-        'moments' => 'Moments',
-        'notes' => 'Notes',
-        'activities' => 'Activities',
-        'memories' => 'Memories',
-        'achievements' => 'Achievements',
-        'mod-things' => 'MOD Things To Do',
-        'mod-notes' => 'MOD Notes',
-        'mod-photos' => 'MOD Photos',
-        'mod-playlists' => 'MOD Playlists',
-        'mod-surprises' => 'MOD Surprises',
-    ] as $type => $label)
+        'moments',
+        'notes',
+        'activities',
+        'memories',
+        'achievements',
+        'mod-things',
+        'mod-notes',
+        'mod-photos',
+        'mod-playlists',
+        'mod-surprises',
+    ] as $type)
         <a href="{{ route('my-space.type', $type) }}" class="card flex items-center justify-between p-5">
-            <span class="font-serif text-lg text-night-100">{{ $label }}</span>
+            <span class="font-serif text-lg text-night-100">{{ __("my-space.type_{$type}") }}</span>
             <span class="text-sm text-night-500">{{ $counts->get($type) ?? 0 }}</span>
         </a>
     @endforeach

@@ -33,7 +33,7 @@ class AuthController extends Controller
             $seconds = RateLimiter::availableIn($throttleKey);
 
             throw ValidationException::withMessages([
-                'username' => "Terlalu banyak percobaan. Coba lagi dalam {$seconds} detik.",
+                'username' => __('flash.throttled', ['seconds' => $seconds]),
             ]);
         }
 
@@ -41,7 +41,7 @@ class AuthController extends Controller
             RateLimiter::hit($throttleKey, 60);
 
             throw ValidationException::withMessages([
-                'username' => 'Username atau password salah.',
+                'username' => __('flash.login_failed'),
             ]);
         }
 

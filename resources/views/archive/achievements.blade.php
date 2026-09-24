@@ -28,7 +28,7 @@
                         @if($achievement->description)
                             <p class="mt-2 whitespace-pre-line text-sm text-night-300">{{ $achievement->description }}</p>
                         @endif
-                        <p class="mt-3 text-[11px] uppercase tracking-widest text-night-600">{{ optional($achievement->date)->format('j F Y') }}</p>
+                        <p class="mt-3 text-[11px] uppercase tracking-widest text-night-600">{{ optional($achievement->date)->translatedFormat('j F Y') }}</p>
                     </div>
                 </article>
             @endforeach

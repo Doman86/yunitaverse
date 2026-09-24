@@ -31,7 +31,7 @@
                         @if($activity->description)
                             <p class="mt-3 whitespace-pre-line text-sm leading-relaxed text-night-300">{{ $activity->description }}</p>
                         @endif
-                        <p class="mt-4 text-[11px] uppercase tracking-widest text-night-600">{{ optional($activity->date)->format('j F Y') }}</p>
+                        <p class="mt-4 text-[11px] uppercase tracking-widest text-night-600">{{ optional($activity->date)->translatedFormat('j F Y') }}</p>
                     </div>
                 </article>
             @endforeach

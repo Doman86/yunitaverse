@@ -50,6 +50,6 @@ class ProfileController extends Controller
 
         $profile->update($data);
 
-        return redirect()->route('manage.profile.edit')->with('success', 'Profile diperbarui.');
+        return redirect()->route('manage.profile.edit')->with('success', __('flash.profile_saved'));
     }
 }

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>@yield('title', 'My Space') — {{ $siteName }}</title>
+    <title>@yield('title', $text['myspace_label']) — {{ $siteName }}</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☾</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,15 +13,16 @@
 </head>
 <body class="min-h-dvh bg-night-950 font-sans text-night-100 antialiased">
 <header class="sticky top-0 z-40 border-b border-night-700/60 bg-night-950/80 backdrop-blur">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-5 py-3">
         <a href="{{ route('my-space.index') }}" class="font-serif text-lg tracking-wide">
             <span class="{{ $accent['text'] }}">☾</span> {{ $text['myspace_label'] }}
         </a>
-        <nav class="flex items-center gap-4 text-sm text-night-400">
+        <nav class="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm text-night-400">
             <a href="{{ route('home') }}" class="transition-colors hover:text-night-100">← {{ $siteName }}</a>
+            @include('partials.lang-switch')
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="transition-colors hover:text-night-100">Logout</button>
+                <button type="submit" class="transition-colors hover:text-night-100">{{ __('site.logout') }}</button>
             </form>
         </nav>
     </div>

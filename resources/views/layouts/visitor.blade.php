@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +36,7 @@
         </main>
 
         <footer class="relative z-10 pb-8 pt-6 text-center">
+            @include('partials.lang-switch', ['variant' => 'footer'])
             <p class="text-xs tracking-widest text-night-600 uppercase">@yield('footer', $text['footer_note'])</p>
         </footer>
     </div>

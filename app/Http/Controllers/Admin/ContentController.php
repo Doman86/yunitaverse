@@ -22,20 +22,24 @@ use Illuminate\View\View;
 
 class ContentController extends Controller
 {
+    /**
+     * Type => [model, admin.* label key, editable fields].
+     * Labels are translation keys so they follow the active locale.
+     */
     public const REGISTRY = [
-        'moments' => [Moment::class, 'Moment', ['title', 'caption', 'description', 'image', 'date', 'category', 'status', 'is_featured']],
-        'journeys' => [Journey::class, 'Journey', ['title', 'caption', 'description', 'image', 'date', 'year', 'category', 'status', 'is_featured', 'is_active']],
-        'achievements' => [Achievement::class, 'Achievement', ['title', 'caption', 'description', 'image', 'date', 'status']],
-        'activities' => [Activity::class, 'Activity', ['title', 'caption', 'description', 'image', 'date', 'category', 'status']],
-        'favorites' => [Favorite::class, 'Favorite', ['title', 'caption', 'description', 'image', 'category', 'status']],
-        'notes' => [Note::class, 'Note', ['title', 'caption', 'content', 'mood', 'image', 'date', 'status']],
-        'memories' => [Memory::class, 'Memory', ['title', 'caption', 'content', 'image', 'date', 'status']],
-        'mod-things' => [ModThingToDo::class, 'MOD Thing To Do', ['title', 'caption', 'description', 'mood', 'image', 'link', 'date', 'category', 'status', 'order']],
-        'mod-notes' => [ModNote::class, 'MOD Note', ['title', 'caption', 'content', 'mood', 'image', 'date', 'status']],
-        'mod-photos' => [ModPhoto::class, 'MOD Photo', ['title', 'caption', 'description', 'image', 'mood', 'date', 'category', 'status']],
-        'mod-playlists' => [ModPlaylist::class, 'MOD Playlist', ['title', 'caption', 'description', 'spotify_url', 'mood', 'category', 'status']],
-        'mod-surprises' => [ModSurprise::class, 'MOD Surprise', ['title', 'caption', 'content', 'image', 'link', 'mood', 'type', 'status']],
-        'soundtracks' => [Soundtrack::class, 'Soundtrack', ['title', 'caption', 'description', 'spotify_url', 'kind', 'category', 'status']],
+        'moments' => [Moment::class, 'moments', ['title', 'caption', 'description', 'image', 'date', 'category', 'status', 'is_featured']],
+        'journeys' => [Journey::class, 'journey', ['title', 'caption', 'description', 'image', 'date', 'year', 'category', 'status', 'is_featured', 'is_active']],
+        'achievements' => [Achievement::class, 'achievements', ['title', 'caption', 'description', 'image', 'date', 'status']],
+        'activities' => [Activity::class, 'activities', ['title', 'caption', 'description', 'image', 'date', 'category', 'status']],
+        'favorites' => [Favorite::class, 'favorites', ['title', 'caption', 'description', 'image', 'category', 'status']],
+        'notes' => [Note::class, 'archive_notes', ['title', 'caption', 'content', 'mood', 'image', 'date', 'status']],
+        'memories' => [Memory::class, 'memories', ['title', 'caption', 'content', 'image', 'date', 'status']],
+        'mod-things' => [ModThingToDo::class, 'things_to_do', ['title', 'caption', 'description', 'mood', 'image', 'link', 'date', 'category', 'status', 'order']],
+        'mod-notes' => [ModNote::class, 'mod_notes', ['title', 'caption', 'content', 'mood', 'image', 'date', 'status']],
+        'mod-photos' => [ModPhoto::class, 'photos', ['title', 'caption', 'description', 'image', 'mood', 'date', 'category', 'status']],
+        'mod-playlists' => [ModPlaylist::class, 'mod_playlists', ['title', 'caption', 'description', 'spotify_url', 'mood', 'category', 'status']],
+        'mod-surprises' => [ModSurprise::class, 'surprises', ['title', 'caption', 'content', 'image', 'link', 'mood', 'type', 'status']],
+        'soundtracks' => [Soundtrack::class, 'soundtrack', ['title', 'caption', 'description', 'spotify_url', 'kind', 'category', 'status']],
     ];
 
     public const MOODS = ['good', 'normal', 'sad', 'all'];
@@ -101,7 +105,7 @@ class ContentController extends Controller
 
         $model::create($data);
 
-        return redirect()->route('manage.content.index', $type)->with('success', $label . ' dibuat.');
+        return redirect()->route('manage.content.index', $type)->with('success', __('flash.created', ['type' => $label]));
     }
 
     public function edit(string $type, int $id): View
@@ -128,7 +132,7 @@ class ContentController extends Controller
 
         $item->update($data);
 
-        return redirect()->route('manage.content.index', $type)->with('success', $label . ' diperbarui.');
+        return redirect()->route('manage.content.index', $type)->with('success', __('flash.updated', ['type' => $label]));
     }
 
     public function destroy(string $type, int $id)
@@ -143,7 +147,7 @@ class ContentController extends Controller
 
         $item->delete();
 
-        return redirect()->route('manage.content.index', $type)->with('success', $label . ' dihapus.');
+        return redirect()->route('manage.content.index', $type)->with('success', __('flash.deleted', ['type' => $label]));
     }
 
     public function toggle(string $type, int $id)
@@ -153,7 +157,10 @@ class ContentController extends Controller
         $item = $model::findOrFail($id);
         $item->update(['status' => $item->status === 'published' ? 'draft' : 'published']);
 
-        return back()->with('success', $label . ' status: ' . $item->status . '.');
+        return back()->with('success', __('flash.status_toggled', [
+            'type' => $label,
+            'status' => __('flash.status_' . $item->status),
+        ]));
     }
 
     private function resolve(string $type): array
@@ -162,7 +169,10 @@ class ContentController extends Controller
 
         abort_unless($entry !== null, 404);
 
-        return $entry;
+        // Resolve the label through the translator so it follows the active locale.
+        [$model, $labelKey, $fields] = $entry;
+
+        return [$model, __("admin.{$labelKey}"), $fields];
     }
 
     private function validateFor(Request $request, array $fields): array

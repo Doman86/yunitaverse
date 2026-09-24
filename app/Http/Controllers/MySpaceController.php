@@ -12,6 +12,7 @@ use App\Models\ModPlaylist;
 use App\Models\ModSurprise;
 use App\Models\ModThingToDo;
 use App\Models\Note;
+use App\Support\Text;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -95,7 +96,7 @@ class MySpaceController extends Controller
 
         return redirect()
             ->route('my-space.type', $type)
-            ->with('success', $this->label($type) . ' ditambahkan.');
+            ->with('success', __('flash.created', ['type' => $this->label($type)]));
     }
 
     public function edit(string $type, int $id): View
@@ -136,7 +137,7 @@ class MySpaceController extends Controller
 
         return redirect()
             ->route('my-space.type', $type)
-            ->with('success', $this->label($type) . ' diperbarui.');
+            ->with('success', __('flash.updated', ['type' => $this->label($type)]));
     }
 
     public function destroy(string $type, int $id)
@@ -153,7 +154,7 @@ class MySpaceController extends Controller
 
         return redirect()
             ->route('my-space.type', $type)
-            ->with('success', $this->label($type) . ' dihapus.');
+            ->with('success', __('flash.deleted', ['type' => $this->label($type)]));
     }
 
     /**
@@ -170,14 +171,7 @@ class MySpaceController extends Controller
 
     private function label(string $type): string
     {
-        return match ($type) {
-            'mod-things' => 'Thing To Do',
-            'mod-notes' => 'MOD Note',
-            'mod-photos' => 'MOD Photo',
-            'mod-playlists' => 'Playlist',
-            'mod-surprises' => 'Surprise',
-            default => ucfirst(rtrim($type, 's')),
-        };
+        return Text::get('type_' . $type);
     }
 
     private function relationFor(string $type): string
@@ -192,47 +186,48 @@ class MySpaceController extends Controller
     private function fieldsFor(string $type): array
     {
         // Shared: every type supports title/caption/content-ish fields + status + image.
+        // Labels are translation keys (my-space.field.*) so they follow the active locale.
         $base = [
-            ['name' => 'title', 'label' => 'Title', 'type' => 'text', 'required' => true],
-            ['name' => 'caption', 'label' => 'Caption', 'type' => 'text', 'required' => false],
+            ['name' => 'title', 'label' => 'my-space.field_title', 'type' => 'text', 'required' => true],
+            ['name' => 'caption', 'label' => 'my-space.field_caption', 'type' => 'text', 'required' => false],
         ];
 
         return match ($type) {
             'mod-things' => array_merge($base, [
-                ['name' => 'description', 'label' => 'Description', 'type' => 'textarea', 'required' => false],
-                ['name' => 'mood', 'label' => 'Mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
-                ['name' => 'link', 'label' => 'Link (optional)', 'type' => 'url', 'required' => false],
+                ['name' => 'description', 'label' => 'my-space.field_description', 'type' => 'textarea', 'required' => false],
+                ['name' => 'mood', 'label' => 'my-space.field_mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
+                ['name' => 'link', 'label' => 'my-space.field_link_optional', 'type' => 'url', 'required' => false],
             ]),
             'mod-notes', 'notes' => [
-                ['name' => 'title', 'label' => 'Title', 'type' => 'text', 'required' => false],
-                ['name' => 'caption', 'label' => 'Caption', 'type' => 'text', 'required' => false],
-                ['name' => 'content', 'label' => 'Note', 'type' => 'textarea', 'required' => true],
-                ['name' => 'mood', 'label' => 'Mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
+                ['name' => 'title', 'label' => 'my-space.field_title', 'type' => 'text', 'required' => false],
+                ['name' => 'caption', 'label' => 'my-space.field_caption', 'type' => 'text', 'required' => false],
+                ['name' => 'content', 'label' => 'my-space.field_note', 'type' => 'textarea', 'required' => true],
+                ['name' => 'mood', 'label' => 'my-space.field_mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
             ],
             'mod-photos' => [
-                ['name' => 'title', 'label' => 'Title', 'type' => 'text', 'required' => false],
-                ['name' => 'caption', 'label' => 'Caption', 'type' => 'text', 'required' => false],
-                ['name' => 'description', 'label' => 'Description', 'type' => 'textarea', 'required' => false],
-                ['name' => 'mood', 'label' => 'Mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
-                ['name' => 'image', 'label' => 'Photo', 'type' => 'file', 'required' => true],
+                ['name' => 'title', 'label' => 'my-space.field_title', 'type' => 'text', 'required' => false],
+                ['name' => 'caption', 'label' => 'my-space.field_caption', 'type' => 'text', 'required' => false],
+                ['name' => 'description', 'label' => 'my-space.field_description', 'type' => 'textarea', 'required' => false],
+                ['name' => 'mood', 'label' => 'my-space.field_mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
+                ['name' => 'image', 'label' => 'my-space.field_photo', 'type' => 'file', 'required' => true],
             ],
             'mod-playlists' => [
-                ['name' => 'title', 'label' => 'Title', 'type' => 'text', 'required' => true],
-                ['name' => 'caption', 'label' => 'Caption', 'type' => 'text', 'required' => false],
-                ['name' => 'description', 'label' => 'Description', 'type' => 'textarea', 'required' => false],
-                ['name' => 'spotify_url', 'label' => 'Spotify URL', 'type' => 'url', 'required' => true],
-                ['name' => 'mood', 'label' => 'Mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
+                ['name' => 'title', 'label' => 'my-space.field_title', 'type' => 'text', 'required' => true],
+                ['name' => 'caption', 'label' => 'my-space.field_caption', 'type' => 'text', 'required' => false],
+                ['name' => 'description', 'label' => 'my-space.field_description', 'type' => 'textarea', 'required' => false],
+                ['name' => 'spotify_url', 'label' => 'my-space.field_spotify_url', 'type' => 'url', 'required' => true],
+                ['name' => 'mood', 'label' => 'my-space.field_mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
             ],
             'mod-surprises' => [
-                ['name' => 'title', 'label' => 'Title', 'type' => 'text', 'required' => false],
-                ['name' => 'caption', 'label' => 'Caption', 'type' => 'text', 'required' => false],
-                ['name' => 'content', 'label' => 'Content', 'type' => 'textarea', 'required' => false],
-                ['name' => 'link', 'label' => 'Link / Spotify URL (optional)', 'type' => 'url', 'required' => false],
-                ['name' => 'mood', 'label' => 'Mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
+                ['name' => 'title', 'label' => 'my-space.field_title', 'type' => 'text', 'required' => false],
+                ['name' => 'caption', 'label' => 'my-space.field_caption', 'type' => 'text', 'required' => false],
+                ['name' => 'content', 'label' => 'my-space.field_content', 'type' => 'textarea', 'required' => false],
+                ['name' => 'link', 'label' => 'my-space.field_link_spotify_optional', 'type' => 'url', 'required' => false],
+                ['name' => 'mood', 'label' => 'my-space.field_mood', 'type' => 'select', 'options' => ['good', 'normal', 'sad', 'all']],
             ],
             default => array_merge($base, [
-                ['name' => 'description', 'label' => 'Description', 'type' => 'textarea', 'required' => false],
-                ['name' => 'date', 'label' => 'Date', 'type' => 'date', 'required' => false],
+                ['name' => 'description', 'label' => 'my-space.field_description', 'type' => 'textarea', 'required' => false],
+                ['name' => 'date', 'label' => 'my-space.field_date', 'type' => 'date', 'required' => false],
             ]),
         };
     }

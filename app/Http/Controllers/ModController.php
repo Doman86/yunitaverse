@@ -6,7 +6,7 @@ use App\Models\ModNote;
 use App\Models\ModPhoto;
 use App\Models\ModPlaylist;
 use App\Models\ModThingToDo;
-use App\Models\Setting;
+use App\Support\Text;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -98,7 +98,7 @@ class ModController extends Controller
             return response()->json([
                 'type' => 'note',
                 'title' => null,
-                'content' => Setting::get('text.mod_surprise_empty', 'Nothing is hidden here yet. Come back later. ✦'),
+                'content' => Text::get('mod_surprise_empty'),
                 'caption' => null,
                 'image' => null,
                 'link' => null,

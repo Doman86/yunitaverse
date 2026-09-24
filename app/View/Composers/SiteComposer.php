@@ -3,6 +3,7 @@
 namespace App\View\Composers;
 
 use App\Models\Setting;
+use App\Support\Text;
 use Illuminate\View\View;
 
 class SiteComposer
@@ -46,94 +47,92 @@ class SiteComposer
     ];
 
     /**
-     * Every public-facing copy lives in Settings so the admin can edit it
-     * without touching code. Views must not hardcode sentences.
+     * Every public-facing sentence resolves per locale:
+     * admin DB value (text.{locale}.*) → lang file default → legacy DB value.
      */
-    private const TEXT_DEFAULTS = [
-        // Landing
-        'landing_tagline' => 'a little universe of her world',
-        'enter_label' => 'Enter',
+    private const TEXT_KEYS = [
+        // Landing & Home
+        'landing_tagline',
+        'enter_label',
+        'home_intro',
+        'archive_label',
+        'archive_sub',
+        'mod_label',
+        'mod_sub',
+        'soundtrack_label',
+        'soundtrack_sub',
+        'myspace_label',
+        'myspace_sub',
+        'footer_links_label',
+        'footer_note',
 
-        // Home hub
-        'home_intro' => 'A little universe of :name.',
-        'archive_label' => 'HER ARCHIVE',
-        'archive_sub' => 'Discover her world.',
-        'mod_label' => 'MOD',
-        'mod_sub' => 'Choose what you need today.',
-        'soundtrack_label' => 'SOUNDTRACK',
-        'soundtrack_sub' => 'A collection of sounds.',
-        'myspace_label' => 'MY SPACE',
-        'myspace_sub' => 'Make your own little corner.',
-        'footer_links_label' => 'Moments · Journey · Favorites',
-        'footer_note' => 'made to be revisited.',
-
-        // Archive
-        'archive_intro' => 'Every part of the archive is free to wander.',
-        'archive_label_profile' => 'Profile',
-        'archive_sub_profile' => 'Who she is, in her own words.',
-        'archive_label_moments' => 'Moments',
-        'archive_sub_moments' => 'Little pieces of her world, kept safe here.',
-        'archive_label_journey' => 'Journey',
-        'archive_sub_journey' => 'The road so far, one little step at a time.',
-        'archive_label_achievements' => 'Achievements',
-        'archive_sub_achievements' => 'Quiet wins, kept in a row.',
-        'archive_label_activities' => 'Activities',
-        'archive_sub_activities' => 'What fills her days.',
-        'archive_label_favorites' => 'Favorites',
-        'archive_sub_favorites' => 'The things she keeps close.',
+        // Her Archive
+        'archive_intro',
+        'archive_label_profile',
+        'archive_sub_profile',
+        'archive_label_moments',
+        'archive_sub_moments',
+        'archive_label_journey',
+        'archive_sub_journey',
+        'archive_label_achievements',
+        'archive_sub_achievements',
+        'archive_label_activities',
+        'archive_sub_activities',
+        'archive_label_favorites',
+        'archive_sub_favorites',
 
         // Empty states
-        'empty_title' => 'Nothing here yet.',
-        'empty_message' => 'Come back later.',
+        'empty_title',
+        'empty_message',
 
         // MOD
-        'mod_question' => 'How are you today?',
-        'mod_good_intro' => "Glad you're feeling good. What do you feel like doing?",
-        'mod_normal_intro' => 'Maybe you just need a little something.',
-        'mod_sad_intro' => 'Take your time. There is no hurry here.',
-        'mod_things_label' => 'THINGS TO DO',
-        'mod_notes_label' => 'LITTLE NOTES',
-        'mod_photos_label' => 'PHOTOS',
-        'mod_music_label' => 'MUSIC',
-        'mod_calm_music_label' => 'CALM MUSIC',
-        'mod_comfort_notes_label' => 'COMFORT NOTES',
-        'mod_little_things_label' => 'LITTLE THINGS TO DO',
-        'mod_surprise_label' => 'SURPRISE',
-        'mod_surprise_again' => 'surprise me again',
-        'mod_surprise_empty' => 'Nothing is hidden here yet. Come back later. ✦',
-        'mod_things_page_sub' => 'Small steps for today.',
-        'mod_notes_page_sub' => 'Little words, kept for you.',
-        'mod_photos_page_sub' => 'Frames from her little universe.',
-        'mod_music_page_sub' => 'Something to listen to.',
+        'mod_question',
+        'mod_good_intro',
+        'mod_normal_intro',
+        'mod_sad_intro',
+        'mod_things_label',
+        'mod_notes_label',
+        'mod_photos_label',
+        'mod_music_label',
+        'mod_calm_music_label',
+        'mod_comfort_notes_label',
+        'mod_little_things_label',
+        'mod_surprise_label',
+        'mod_surprise_again',
+        'mod_surprise_empty',
+        'mod_things_page_sub',
+        'mod_notes_page_sub',
+        'mod_photos_page_sub',
+        'mod_music_page_sub',
 
         // Soundtrack
-        'soundtrack_page_sub' => 'Songs that belong somewhere here.',
-        'soundtrack_playlists_label' => 'Playlists',
-        'soundtrack_tracks_label' => 'Songs',
-        'soundtrack_empty' => 'The soundtrack is still being written.',
+        'soundtrack_page_sub',
+        'soundtrack_playlists_label',
+        'soundtrack_tracks_label',
+        'soundtrack_empty',
 
-        // Auth / My Space
-        'login_welcome' => 'Welcome back',
-        'login_back' => '← back to the universe',
-        'myspace_welcome' => 'Welcome back, :name.',
-        'myspace_intro' => 'This is your own little corner. Make something whenever you feel like it.',
-        'myspace_add_moment' => '+ Add Moment',
-        'myspace_add_note' => '+ Write Note',
-        'myspace_add_activity' => '+ Add Activity',
-        'myspace_add_memory' => '+ Add Memory',
-        'myspace_add_mod' => '+ Add MOD Content',
+        // Auth & My Space
+        'login_welcome',
+        'login_back',
+        'myspace_welcome',
+        'myspace_intro',
+        'myspace_add_moment',
+        'myspace_add_note',
+        'myspace_add_activity',
+        'myspace_add_memory',
+        'myspace_add_mod',
     ];
 
     public function compose(View $view): void
     {
         $accentKey = Setting::get('accent', 'moon');
 
-        $text = collect(self::TEXT_DEFAULTS)
-            ->map(fn (string $default, string $key) => Setting::get("text.{$key}", $default));
+        $text = collect(self::TEXT_KEYS)
+            ->mapWithKeys(fn (string $key) => [$key => Text::get($key)]);
 
         $view->with([
             'siteName' => Setting::get('site_name', 'YUNITAVERSE'),
-            'siteTagline' => Setting::get('site_tagline', $text->get('landing_tagline')),
+            'siteTagline' => Setting::get('site_tagline', Text::get('landing_tagline')),
             'timezone' => Setting::get('timezone', 'Asia/Jakarta'),
             'profileName' => Setting::get('profile_name', 'Yunita Dwi Alung'),
             'metaDescription' => Setting::get('meta_description', 'A little universe of Yunita Dwi Alung.'),

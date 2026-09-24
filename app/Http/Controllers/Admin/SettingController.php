@@ -28,79 +28,81 @@ class SettingController extends Controller
 
     /**
      * Every public-facing sentence, grouped for the settings page.
-     * Each group becomes one card in the form.
+     * Each key is stored per locale as text.{locale}.{key}.
+     * Labels/hints are translation keys so they follow the active locale.
      */
     private const TEXT_FIELDS = [
-        'Landing & Home' => [
-            'landing_tagline' => ['Landing tagline', 'The short line under the name on the landing page.'],
-            'enter_label' => ['Tombol ENTER', 'Label tombol masuk di landing page.'],
-            'home_intro' => ['Home intro', 'Gunakan :name untuk menyisipkan nama profile.'],
-            'archive_label' => ['Label HER ARCHIVE', 'Judul pintu pertama di home.'],
-            'archive_sub' => ['Sub HER ARCHIVE', 'Deskripsi kecil di bawahnya.'],
-            'mod_label' => ['Label MOD', 'Judul pintu kedua di home.'],
-            'mod_sub' => ['Sub MOD', 'Deskripsi kecil di bawahnya.'],
-            'soundtrack_label' => ['Label SOUNDTRACK', 'Judul pintu ketiga di home.'],
-            'soundtrack_sub' => ['Sub SOUNDTRACK', 'Deskripsi kecil di bawahnya.'],
-            'myspace_label' => ['Label MY SPACE', 'Judul pintu keempat di home.'],
-            'myspace_sub' => ['Sub MY SPACE', 'Deskripsi kecil di bawahnya.'],
-            'footer_links_label' => ['Footer home links', 'Teks tautan cepat di bawah menu home.'],
-            'footer_note' => ['Footer note', 'Kalimat kecil di footer setiap halaman.'],
+        'settings.section.landing_home' => [
+            'landing_tagline' => ['settings.landing_tagline', 'settings.landing_tagline_hint'],
+            'home_intro' => ['settings.home_intro', 'settings.home_intro_hint'],
+            'archive_label' => ['settings.archive_label', 'settings.archive_label_hint'],
+            'archive_sub' => ['settings.archive_sub', 'settings.archive_sub_hint'],
+            'mod_label' => ['settings.mod_label', 'settings.mod_label_hint'],
+            'mod_sub' => ['settings.mod_sub', ''],
+            'soundtrack_label' => ['settings.soundtrack_label', 'settings.soundtrack_label_hint'],
+            'soundtrack_sub' => ['settings.soundtrack_sub', ''],
+            'myspace_label' => ['settings.myspace_label', 'settings.myspace_label_hint'],
+            'myspace_sub' => ['settings.myspace_sub', ''],
+            'footer_links_label' => ['settings.footer_links_label', 'settings.footer_links_label_hint'],
+            'footer_note' => ['settings.footer_note', 'settings.footer_note_hint'],
         ],
-        'Her Archive' => [
-            'archive_intro' => ['Archive intro', 'Kalimat pembuka halaman archive.'],
-            'archive_label_profile' => ['Label Profile', ''],
-            'archive_sub_profile' => ['Sub Profile', ''],
-            'archive_label_moments' => ['Label Moments', ''],
-            'archive_sub_moments' => ['Sub Moments', ''],
-            'archive_label_journey' => ['Label Journey', ''],
-            'archive_sub_journey' => ['Sub Journey', ''],
-            'archive_label_achievements' => ['Label Achievements', ''],
-            'archive_sub_achievements' => ['Sub Achievements', ''],
-            'archive_label_activities' => ['Label Activities', ''],
-            'archive_sub_activities' => ['Sub Activities', ''],
-            'archive_label_favorites' => ['Label Favorites', ''],
-            'archive_sub_favorites' => ['Sub Favorites', ''],
+        'settings.section.archive' => [
+            'archive_intro' => ['settings.archive_intro', 'settings.archive_intro_hint'],
+            'archive_label_profile' => ['settings.archive_label_profile', ''],
+            'archive_sub_profile' => ['settings.archive_sub_profile', ''],
+            'archive_label_moments' => ['settings.archive_label_moments', ''],
+            'archive_sub_moments' => ['settings.archive_sub_moments', ''],
+            'archive_label_journey' => ['settings.archive_label_journey', ''],
+            'archive_sub_journey' => ['settings.archive_sub_journey', ''],
+            'archive_label_achievements' => ['settings.archive_label_achievements', ''],
+            'archive_sub_achievements' => ['settings.archive_sub_achievements', ''],
+            'archive_label_activities' => ['settings.archive_label_activities', ''],
+            'archive_sub_activities' => ['settings.archive_sub_activities', ''],
+            'archive_label_favorites' => ['settings.archive_label_favorites', ''],
+            'archive_sub_favorites' => ['settings.archive_sub_favorites', ''],
         ],
-        'MOD' => [
-            'mod_question' => ['MOD question', 'Pertanyaan besar di halaman pilih mood.'],
-            'mod_good_intro' => ['Intro mood GOOD', ''],
-            'mod_normal_intro' => ['Intro mood NORMAL', ''],
-            'mod_sad_intro' => ['Intro mood SAD', ''],
-            'mod_things_label' => ['Label Things To Do', 'Tombol di hub mood.'],
-            'mod_notes_label' => ['Label Little Notes', ''],
-            'mod_photos_label' => ['Label Photos', ''],
-            'mod_music_label' => ['Label Music', ''],
-            'mod_calm_music_label' => ['Label Calm Music', 'Dipakai di mood SAD.'],
-            'mod_comfort_notes_label' => ['Label Comfort Notes', 'Dipakai di mood SAD.'],
-            'mod_little_things_label' => ['Label Little Things', 'Dipakai di mood SAD.'],
-            'mod_surprise_label' => ['Label Surprise', ''],
-            'mod_surprise_again' => ['Tombol surprise lagi', 'Muncul di kartu hasil surprise.'],
-            'mod_surprise_empty' => ['Surprise kosong', 'Muncul jika belum ada surprise di database.'],
-            'mod_things_page_sub' => ['Sub halaman Things', ''],
-            'mod_notes_page_sub' => ['Sub halaman Notes', ''],
-            'mod_photos_page_sub' => ['Sub halaman Photos', ''],
-            'mod_music_page_sub' => ['Sub halaman Music', ''],
+        'settings.section.mod' => [
+            'mod_question' => ['settings.mod_question', 'settings.mod_question_hint'],
+            'mod_good_intro' => ['settings.mod_good_intro', ''],
+            'mod_normal_intro' => ['settings.mod_normal_intro', ''],
+            'mod_sad_intro' => ['settings.mod_sad_intro', ''],
+            'mod_things_label' => ['settings.mod_things_label', 'settings.mod_things_label_hint'],
+            'mod_notes_label' => ['settings.mod_notes_label', ''],
+            'mod_photos_label' => ['settings.mod_photos_label', ''],
+            'mod_music_label' => ['settings.mod_music_label', ''],
+            'mod_calm_music_label' => ['settings.mod_calm_music_label', 'settings.mod_calm_music_label_hint'],
+            'mod_comfort_notes_label' => ['settings.mod_comfort_notes_label', 'settings.mod_comfort_notes_label_hint'],
+            'mod_little_things_label' => ['settings.mod_little_things_label', 'settings.mod_little_things_label_hint'],
+            'mod_surprise_label' => ['settings.mod_surprise_label', ''],
+            'mod_surprise_again' => ['settings.mod_surprise_again', 'settings.mod_surprise_again_hint'],
+            'mod_surprise_empty' => ['settings.mod_surprise_empty', 'settings.mod_surprise_empty_hint'],
+            'mod_things_page_sub' => ['settings.mod_things_page_sub', ''],
+            'mod_notes_page_sub' => ['settings.mod_notes_page_sub', ''],
+            'mod_photos_page_sub' => ['settings.mod_photos_page_sub', ''],
+            'mod_music_page_sub' => ['settings.mod_music_page_sub', ''],
         ],
-        'Soundtrack & Empty State' => [
-            'soundtrack_page_sub' => ['Sub halaman Soundtrack', ''],
-            'soundtrack_playlists_label' => ['Judul section Playlists', ''],
-            'soundtrack_tracks_label' => ['Judul section Songs', ''],
-            'soundtrack_empty' => ['Soundtrack kosong', 'Muncul jika soundtrack masih kosong.'],
-            'empty_title' => ['Empty state judul', 'Judul default saat konten kosong.'],
-            'empty_message' => ['Empty state pesan', 'Pesan default saat konten kosong.'],
+        'settings.section.soundtrack' => [
+            'soundtrack_page_sub' => ['settings.soundtrack_page_sub', ''],
+            'soundtrack_playlists_label' => ['settings.soundtrack_playlists_label', ''],
+            'soundtrack_tracks_label' => ['settings.soundtrack_tracks_label', ''],
+            'soundtrack_empty' => ['settings.soundtrack_empty', 'settings.soundtrack_empty_hint'],
+            'empty_title' => ['settings.empty_title', 'settings.empty_title_hint'],
+            'empty_message' => ['settings.empty_message', 'settings.empty_message_hint'],
         ],
-        'Login & My Space' => [
-            'login_welcome' => ['Judul halaman login', ''],
-            'login_back' => ['Tautan kembali di login', ''],
-            'myspace_welcome' => ['Sambutan My Space', 'Gunakan :name untuk menyisipkan nama user.'],
-            'myspace_intro' => ['Intro My Space', ''],
-            'myspace_add_moment' => ['Tombol + Add Moment', ''],
-            'myspace_add_note' => ['Tombol + Write Note', ''],
-            'myspace_add_activity' => ['Tombol + Add Activity', ''],
-            'myspace_add_memory' => ['Tombol + Add Memory', ''],
-            'myspace_add_mod' => ['Tombol + Add MOD Content', ''],
+        'settings.section.login_myspace' => [
+            'login_welcome' => ['settings.login_welcome', ''],
+            'login_back' => ['settings.login_back', ''],
+            'myspace_welcome' => ['settings.myspace_welcome', 'settings.myspace_welcome_hint'],
+            'myspace_intro' => ['settings.myspace_intro', ''],
+            'myspace_add_moment' => ['settings.myspace_add_moment', ''],
+            'myspace_add_note' => ['settings.myspace_add_note', ''],
+            'myspace_add_activity' => ['settings.myspace_add_activity', ''],
+            'myspace_add_memory' => ['settings.myspace_add_memory', ''],
+            'myspace_add_mod' => ['settings.myspace_add_mod', ''],
         ],
     ];
+
+    private const LOCALES = ['id', 'en'];
 
     public function edit(): View
     {
@@ -112,10 +114,16 @@ class SettingController extends Controller
             'settings' => collect(self::KEYS)->mapWithKeys(fn (array $rule, string $key) => [
                 $key => Setting::get($key, ''),
             ]),
-            'texts' => collect($textKeys)
-                ->mapWithKeys(fn (string $key) => [$key => Setting::get("text.{$key}", '')])
+            'texts' => collect(self::LOCALES)
+                ->mapWithKeys(fn (string $locale) => [
+                    $locale => collect($textKeys)->mapWithKeys(fn (string $key) => [
+                        $key => Setting::get("text.{$locale}.{$key}", ''),
+                    ])->all(),
+                ])
                 ->all(),
+            'textKeys' => $textKeys,
             'textFields' => self::TEXT_FIELDS,
+            'locales' => self::LOCALES,
             'accents' => ['moon', 'rose', 'amber', 'violet', 'teal'],
             'currentAccent' => Setting::get('accent', 'moon'),
             'ogImageUrl' => Setting::get('og_image'),
@@ -129,10 +137,10 @@ class SettingController extends Controller
         $rules['accent'] = ['required', 'in:moon,rose,amber,violet,teal'];
         $rules['og_image'] = ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'];
 
-        // Every text.* field is optional free text.
-        foreach (self::TEXT_FIELDS as $fields) {
-            foreach (array_keys($fields) as $key) {
-                $rules["text.{$key}"] = ['nullable', 'string', 'max:1000'];
+        // Every text.{locale}.* field is optional free text.
+        foreach (self::LOCALES as $locale) {
+            foreach (collect(self::TEXT_FIELDS)->flatMap(fn (array $fields) => array_keys($fields)) as $key) {
+                $rules["text.{$locale}.{$key}"] = ['nullable', 'string', 'max:1000'];
             }
         }
 
@@ -153,9 +161,18 @@ class SettingController extends Controller
 
         foreach ($validated as $key => $value) {
             if ($key === 'text') {
-                foreach ($value as $textKey => $textValue) {
-                    // Empty input = kembali ke default bawaan website.
-                    Setting::set("text.{$textKey}", $textValue !== null && trim($textValue) !== '' ? $textValue : null);
+                foreach ($value as $locale => $texts) {
+                    if (! in_array($locale, self::LOCALES, true)) {
+                        continue; // never persist unknown locales
+                    }
+
+                    foreach ($texts as $textKey => $textValue) {
+                        // Empty input = fall back to the built-in default.
+                        Setting::set(
+                            "text.{$locale}.{$textKey}",
+                            is_string($textValue) && trim($textValue) !== '' ? $textValue : null,
+                        );
+                    }
                 }
 
                 continue;
@@ -164,6 +181,6 @@ class SettingController extends Controller
             Setting::set($key, $value);
         }
 
-        return redirect()->route('manage.settings.edit')->with('success', 'Settings disimpan.');
+        return redirect()->route('manage.settings.edit')->with('success', __('flash.settings_saved'));
     }
 }

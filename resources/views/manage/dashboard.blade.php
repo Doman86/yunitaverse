@@ -1,10 +1,10 @@
 @extends('layouts.manage')
 
-@section('title', 'Dashboard')
+@section('title', __('admin.dashboard'))
 
 @section('content')
-<h1 class="font-serif text-3xl">Dashboard</h1>
-<p class="mt-2 text-sm text-night-400">Everything in the universe, at a glance.</p>
+<h1 class="font-serif text-3xl">{{ __('admin.dashboard') }}</h1>
+<p class="mt-2 text-sm text-night-400">{{ __('admin.dashboard_sub') }}</p>
 
 <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
     @foreach($counts as $label => $count)

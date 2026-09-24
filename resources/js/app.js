@@ -3,7 +3,13 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 /**
- * Realtime clock + date (Asia/Jakarta). Never from the database.
+ * Active locale, injected from the server on every page.
+ */
+const LOCALE = document.documentElement.lang === 'id' ? 'id' : 'en';
+
+/**
+ * Realtime clock + date (site timezone). Never from the database.
+ * Date format follows the active language.
  */
 Alpine.data('clock', (timezone = 'Asia/Jakarta') => ({
     time: '--:--:--',
@@ -12,7 +18,7 @@ Alpine.data('clock', (timezone = 'Asia/Jakarta') => ({
         const tick = () => {
             const now = new Date();
 
-            this.time = now.toLocaleTimeString('en-GB', {
+            this.time = now.toLocaleTimeString(LOCALE === 'id' ? 'id-ID' : 'en-GB', {
                 timeZone: timezone,
                 hour: '2-digit',
                 minute: '2-digit',
@@ -20,7 +26,7 @@ Alpine.data('clock', (timezone = 'Asia/Jakarta') => ({
                 hour12: false,
             });
 
-            this.date = now.toLocaleDateString('en-GB', {
+            this.date = now.toLocaleDateString(LOCALE === 'id' ? 'id-ID' : 'en-GB', {
                 timeZone: timezone,
                 weekday: 'long',
                 day: 'numeric',
@@ -38,7 +44,7 @@ Alpine.data('clock', (timezone = 'Asia/Jakarta') => ({
  * Hidden admin access: tap the moon on the landing page 3 times.
  * Never advertised anywhere on the site.
  */
-Alpine.data('secretMoon', (target) => ({
+Alpine.data('secretMoon', (target, hint, unlockedHint) => ({
     clicks: 0,
     hint: '',
     timer: null,
@@ -55,12 +61,12 @@ Alpine.data('secretMoon', (target) => ({
         }, 1600);
 
         if (this.clicks === 2) {
-            this.hint = 'Private area…';
+            this.hint = hint;
         }
 
         if (this.clicks >= 3) {
             this.unlocked = true;
-            this.hint = 'Private area ✦';
+            this.hint = unlockedHint;
             setTimeout(() => {
                 window.location.href = target;
             }, 700);
@@ -70,10 +76,12 @@ Alpine.data('secretMoon', (target) => ({
 
 /**
  * Surprise box: draw one random surprise for the chosen mood.
+ * typeLabels maps a surprise type key to a translated label from the server.
  */
-Alpine.data('surpriseBox', (mood = null) => ({
+Alpine.data('surpriseBox', (mood = null, typeLabels = {}) => ({
     item: null,
     loading: false,
+    typeLabels,
     async draw() {
         if (this.loading) {
             return;

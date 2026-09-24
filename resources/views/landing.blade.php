@@ -9,7 +9,7 @@
     </div>
 
     {{-- Hidden admin entry: 3 taps on the moon logo --}}
-    <div x-data="secretMoon(@js(route('manage.login')))" class="select-none">
+    <div x-data="secretMoon(@js(route('manage.login')), @js(__('site.secret_hint')), @js(__('site.secret_unlocked')))" class="select-none">
         <p class="animate-float cursor-pointer text-4xl text-night-200" aria-hidden="true" @click="hit()">☾</p>
 
         <p class="mt-4 text-sm tracking-[0.3em] uppercase text-night-400" x-show="hint" x-text="hint" x-cloak></p>

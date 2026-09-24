@@ -17,6 +17,19 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
+| Language switch — keeps the visitor on the exact same page
+|--------------------------------------------------------------------------
+*/
+Route::get('/locale/{locale}', function (string $locale) {
+    abort_unless(in_array($locale, ['id', 'en'], true), 404);
+
+    session(['locale' => $locale]);
+
+    return redirect()->back();
+})->name('locale.switch');
+
+/*
+|--------------------------------------------------------------------------
 | Public — visitor, no login required
 |--------------------------------------------------------------------------
 */

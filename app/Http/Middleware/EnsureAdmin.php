@@ -16,7 +16,7 @@ class EnsureAdmin
         }
 
         if (! Auth::user()->isAdmin()) {
-            abort(403, 'This area is private.');
+            abort(403, __('flash.not_admin'));
         }
 
         return $next($request);

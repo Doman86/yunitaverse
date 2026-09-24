@@ -29,7 +29,7 @@ class UserController extends Controller
 
         User::create($data);
 
-        return redirect()->route('manage.users.index')->with('success', 'User dibuat.');
+        return redirect()->route('manage.users.index')->with('success', __('flash.user_created'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
@@ -46,22 +46,22 @@ class UserController extends Controller
         }
 
         if ($user->id === $request->user()->id && $data['role'] !== 'admin') {
-            return back()->with('success', 'Kamu tidak bisa menurunkan role akunmu sendiri.');
+            return back()->with('success', __('flash.user_self_role'));
         }
 
         $user->update($data);
 
-        return redirect()->route('manage.users.index')->with('success', 'User diperbarui.');
+        return redirect()->route('manage.users.index')->with('success', __('flash.user_updated'));
     }
 
     public function destroy(Request $request, User $user): RedirectResponse
     {
         if ($user->id === $request->user()->id) {
-            return back()->with('success', 'Kamu tidak bisa menghapus akunmu sendiri.');
+            return back()->with('success', __('flash.user_self_delete'));
         }
 
         $user->delete();
 
-        return redirect()->route('manage.users.index')->with('success', 'User dihapus.');
+        return redirect()->route('manage.users.index')->with('success', __('flash.user_deleted'));
     }
 }

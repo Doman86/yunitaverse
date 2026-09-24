@@ -1,6 +1,6 @@
 @extends('layouts.visitor')
 
-@section('title', 'Home — ' . $siteName)
+@section('title', __('common.home') . ' — ' . $siteName)
 
 @section('content')
 <section class="starfield relative flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center">

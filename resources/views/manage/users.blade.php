@@ -1,23 +1,23 @@
 @extends('layouts.manage')
 
-@section('title', 'Users — Manage')
+@section('title', __('admin.users') . ' — ' . __('common.admin_area'))
 
 @section('content')
-<h1 class="font-serif text-3xl">Users</h1>
-<p class="mt-2 text-sm text-night-400">No public registration. Accounts are created here only.</p>
+<h1 class="font-serif text-3xl">{{ __('admin.users') }}</h1>
+<p class="mt-2 text-sm text-night-400">{{ __('admin.users_sub') }}</p>
 
 {{-- Add user --}}
 <form method="POST" action="{{ route('manage.users.store') }}" class="card mt-8 grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 lg:grid-cols-5">
     @csrf
-    <input type="text" name="username" placeholder="Username" required
+    <input type="text" name="username" placeholder="{{ __('admin.username') }}" required
            class="rounded-xl border border-night-700 bg-night-900 px-4 py-2.5 text-sm">
-    <input type="text" name="name" placeholder="Display name" required
+    <input type="text" name="name" placeholder="{{ __('admin.display_name') }}" required
            class="rounded-xl border border-night-700 bg-night-900 px-4 py-2.5 text-sm">
-    <input type="text" name="role" placeholder="role: admin / yunita" required
+    <input type="text" name="role" placeholder="{{ __('admin.role_hint') }}" required
            class="rounded-xl border border-night-700 bg-night-900 px-4 py-2.5 text-sm">
-    <input type="password" name="password" placeholder="Password" required
+    <input type="password" name="password" placeholder="{{ __('admin.password') }}" required
            class="rounded-xl border border-night-700 bg-night-900 px-4 py-2.5 text-sm">
-    <button type="submit" class="rounded-xl bg-night-100 px-5 py-2.5 text-sm font-semibold text-night-900 hover:bg-white">Add user</button>
+    <button type="submit" class="rounded-xl bg-night-100 px-5 py-2.5 text-sm font-semibold text-night-900 hover:bg-white">{{ __('admin.add_user') }}</button>
 </form>
 
 <div class="mt-8 space-y-3">
@@ -39,16 +39,16 @@
                     <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>admin</option>
                     <option value="yunita" {{ $user->role === 'yunita' ? 'selected' : '' }}>yunita</option>
                 </select>
-                <input type="password" name="password" placeholder="New password…" 
+                <input type="password" name="password" placeholder="{{ __('admin.new_password') }}" 
                        class="w-36 rounded-lg border border-night-700 bg-night-900 px-3 py-2 text-sm">
-                <button type="submit" class="rounded-lg border border-night-600 px-4 py-2 text-xs hover:border-night-400">Save</button>
+                <button type="submit" class="rounded-lg border border-night-600 px-4 py-2 text-xs hover:border-night-400">{{ __('admin.save') }}</button>
             </form>
 
             @if($user->id !== auth()->id())
-                <form method="POST" action="{{ route('manage.users.destroy', $user) }}" onsubmit="return confirm('Delete this user?')">
+                <form method="POST" action="{{ route('manage.users.destroy', $user) }}" onsubmit="return confirm(@js(__('admin.delete_user_confirm')))">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="text-sm text-rose-300/80 hover:text-rose-300">Delete</button>
+                    <button type="submit" class="text-sm text-rose-300/80 hover:text-rose-300">{{ __('admin.delete') }}</button>
                 </form>
             @endif
         </article>

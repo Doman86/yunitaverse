@@ -29,7 +29,7 @@
                         <p class="mt-3 whitespace-pre-line text-sm leading-relaxed text-night-300">{{ $moment->description }}</p>
                     @endif
                     <p class="mt-4 text-[11px] uppercase tracking-widest text-night-600">
-                        {{ optional($moment->date)->format('j F Y') }}
+                        {{ optional($moment->date)->translatedFormat('j F Y') }}
                         @if($moment->category)
                             <span class="mx-1">·</span> {{ $moment->category }}
                         @endif

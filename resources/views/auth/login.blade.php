@@ -12,12 +12,12 @@
         <form method="POST" action="{{ route('login.attempt') }}" class="mt-8 space-y-5">
             @csrf
             <div>
-                <label for="username" class="text-xs uppercase tracking-widest text-night-500">Username</label>
+                <label for="username" class="text-xs uppercase tracking-widest text-night-500">{{ __('admin.username') }}</label>
                 <input id="username" name="username" type="text" value="{{ old('username') }}" required autofocus
                        class="mt-2 w-full rounded-xl border border-night-700 bg-night-900 px-4 py-3 text-sm text-night-100 outline-none transition-colors focus:border-night-400">
             </div>
             <div>
-                <label for="password" class="text-xs uppercase tracking-widest text-night-500">Password</label>
+                <label for="password" class="text-xs uppercase tracking-widest text-night-500">{{ __('admin.password') }}</label>
                 <input id="password" name="password" type="password" required
                        class="mt-2 w-full rounded-xl border border-night-700 bg-night-900 px-4 py-3 text-sm text-night-100 outline-none transition-colors focus:border-night-400">
             </div>
@@ -26,7 +26,7 @@
             @endif
             <button type="submit"
                     class="w-full rounded-xl bg-night-100 py-3 text-sm font-semibold text-night-900 transition-colors hover:bg-white">
-                Enter
+                {{ __('site.enter') }}
             </button>
         </form>
 

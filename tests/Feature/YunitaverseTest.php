@@ -57,29 +57,29 @@ class YunitaverseTest extends TestCase
     {
         $this->get('/home')
             ->assertOk()
-            ->assertSee('HER ARCHIVE')
+            ->assertSee('ARSIP DIA')
             ->assertSee('MOD')
             ->assertSee('SOUNDTRACK')
-            ->assertSee('MY SPACE');
+            ->assertSee('RUANGKU');
     }
 
     public function test_archive_index_links_all_sections(): void
     {
-        Setting::set('text.archive_label_profile', 'Profile');
-        Setting::set('text.archive_label_moments', 'Moments');
-        Setting::set('text.archive_label_journey', 'Journey');
-        Setting::set('text.archive_label_achievements', 'Achievements');
-        Setting::set('text.archive_label_activities', 'Activities');
-        Setting::set('text.archive_label_favorites', 'Favorites');
+        Setting::set('text.id.archive_label_profile', 'Profil');
+        Setting::set('text.id.archive_label_moments', 'Momen');
+        Setting::set('text.id.archive_label_journey', 'Perjalanan');
+        Setting::set('text.id.archive_label_achievements', 'Pencapaian');
+        Setting::set('text.id.archive_label_activities', 'Aktivitas');
+        Setting::set('text.id.archive_label_favorites', 'Favorit');
 
         $this->get('/archive')
             ->assertOk()
-            ->assertSee('Profile')
-            ->assertSee('Moments')
-            ->assertSee('Journey')
-            ->assertSee('Achievements')
-            ->assertSee('Activities')
-            ->assertSee('Favorites');
+            ->assertSee('Profil')
+            ->assertSee('Momen')
+            ->assertSee('Perjalanan')
+            ->assertSee('Pencapaian')
+            ->assertSee('Aktivitas')
+            ->assertSee('Favorit');
     }
 
     public function test_archive_pages_load_and_use_yunita_name(): void
@@ -87,7 +87,7 @@ class YunitaverseTest extends TestCase
         Profile::create(['name' => 'Yunita Dwi Alung', 'bio' => 'Hi.', 'quote' => 'Enjoy the little things.']);
 
         $this->get('/archive/profile')->assertOk()->assertSee('Yunita Dwi Alung');
-        $this->get('/archive/moments')->assertOk()->assertSee('Nothing here yet.');
+        $this->get('/archive/moments')->assertOk()->assertSee('Belum ada apa-apa di sini.');
         $this->get('/archive/journey')->assertOk();
         $this->get('/archive/achievements')->assertOk();
         $this->get('/archive/activities')->assertOk();
@@ -114,10 +114,10 @@ class YunitaverseTest extends TestCase
 
     public function test_mod_pages_load(): void
     {
-        $this->get('/mod')->assertOk()->assertSee('How are you today?');
+        $this->get('/mod')->assertOk()->assertSee('Bagaimana kabarmu hari ini?');
         $this->get('/mod/good')->assertOk();
         $this->get('/mod/normal')->assertOk();
-        $this->get('/mod/sad')->assertOk()->assertSee('Take your time.');
+        $this->get('/mod/sad')->assertOk()->assertSee('Ambil waktu mu.');
         $this->get('/mod/unknown-mood')->assertNotFound();
     }
 
@@ -157,7 +157,7 @@ class YunitaverseTest extends TestCase
 
         $this->actingAs($this->yunita)->get('/my-space')
             ->assertOk()
-            ->assertSee('Welcome back, Yunita Dwi Alung.');
+            ->assertSee('Selamat datang kembali, Yunita Dwi Alung.');
     }
 
     public function test_yunita_can_create_and_delete_her_own_moment(): void
@@ -218,7 +218,7 @@ class YunitaverseTest extends TestCase
 
         $this->actingAs($this->admin)->get('/manage/dashboard')
             ->assertOk()
-            ->assertSee('Dashboard');
+            ->assertSee('Dasbor');
     }
 
     public function test_manage_routes_are_protected(): void
@@ -303,22 +303,28 @@ class YunitaverseTest extends TestCase
                 'profile_name' => 'Yunita Dwi Alung',
                 'accent' => 'amber',
                 'text' => [
-                    'enter_label' => 'Masuk',
-                    'mod_question' => 'How are you feeling today?',
+                    'id' => [
+                        'enter_label' => 'Masuk ke dunia',
+                        'mod_question' => 'Apa kabar hari ini?',
+                    ],
+                    'en' => [
+                        'enter_label' => 'Step inside',
+                        'mod_question' => 'How are you feeling today?',
+                    ],
                 ],
             ])
             ->assertRedirect(route('manage.settings.edit'));
 
         $this->assertSame('a little universe of her world', Setting::get('site_tagline'));
         $this->assertSame('amber', Setting::get('accent'));
-        $this->assertSame('Masuk', Setting::get('text.enter_label'));
-        $this->assertSame('How are you feeling today?', Setting::get('text.mod_question'));
+        $this->assertSame('Masuk ke dunia', Setting::get('text.id.enter_label'));
+        $this->assertSame('How are you feeling today?', Setting::get('text.en.mod_question'));
     }
 
     public function test_public_pages_render_edited_text_from_settings(): void
     {
-        Setting::set('text.enter_label', 'Masuk ke dunia');
-        Setting::set('text.mod_question', 'Apa kabar hari ini?');
+        Setting::set('text.id.enter_label', 'Masuk ke dunia');
+        Setting::set('text.id.mod_question', 'Apa kabar hari ini?');
 
         $this->get('/')->assertOk()->assertSee('Masuk ke dunia');
         $this->get('/mod')->assertOk()->assertSee('Apa kabar hari ini?');
@@ -346,5 +352,54 @@ class YunitaverseTest extends TestCase
         $this->assertDatabaseHas('users', ['username' => 'Yunita', 'role' => 'yunita']);
         $this->assertDatabaseHas('profiles', ['name' => 'Yunita Dwi Alung']);
         $this->assertDatabaseHas('settings', ['key' => 'site_name']);
+    }
+
+    /*
+    |------------------------------------------------------------------
+    | i18n
+    |------------------------------------------------------------------
+    */
+
+    public function test_default_locale_is_indonesian(): void
+    {
+        $this->get('/mod')->assertOk()->assertSee('Bagaimana kabarmu hari ini?');
+        $this->get('/')->assertOk()->assertSee('lang="id"', false);
+    }
+
+    public function test_switching_to_english_persists_across_pages(): void
+    {
+        $this->get('/mod?lang=en')->assertOk();
+
+        // Same session, different page: English must stay active.
+        $this->get('/mod')->assertOk()->assertSee('How are you today?');
+        $this->get('/soundtrack')->assertOk()->assertSee('lang="en"', false);
+    }
+
+    public function test_switching_back_to_indonesian_persists(): void
+    {
+        $this->get('/mod?lang=en')->assertOk();
+        $this->get('/mod?lang=id')->assertOk();
+
+        $this->get('/mod')->assertOk()->assertSee('Bagaimana kabarmu hari ini?');
+    }
+
+    public function test_unknown_locale_is_rejected(): void
+    {
+        $this->get('/mod?lang=fr')->assertOk();
+
+        $this->get('/mod')->assertOk()->assertSee('Bagaimana kabarmu hari ini?');
+    }
+
+    public function test_english_admin_copy_renders(): void
+    {
+        $this->post('/manage/login', ['username' => 'Doman', 'password' => 'password']);
+
+        $this->get('/manage/dashboard?lang=en')
+            ->assertOk()
+            ->assertSee('Everything in the universe, at a glance.');
+
+        $this->get('/manage/dashboard')
+            ->assertOk()
+            ->assertSee('Semua yang ada di alam semesta ini, dalam satu pandangan.');
     }
 }

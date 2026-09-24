@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="mx-auto max-w-2xl px-6 py-16">
-    <a href="{{ route('mod.' . $mood) }}" class="text-xs uppercase tracking-widest text-night-600 transition-colors hover:text-night-300">← MOD</a>
+    <a href="{{ route('mod.' . $mood) }}" class="text-xs uppercase tracking-widest text-night-600 transition-colors hover:text-night-300">← {{ __('admin.mod') }}</a>
     <h1 class="mt-4 font-serif text-4xl">{{ $text['mod_notes_label'] }}</h1>
     <p class="mt-2 text-sm text-night-400">{{ $text['mod_notes_page_sub'] }}</p>
 
@@ -24,7 +24,7 @@
                     @if($note->image)
                         <img src="{{ \Illuminate\Support\Facades\Storage::url($note->image) }}" alt="" class="mt-4 rounded-lg border border-night-700">
                     @endif
-                    <p class="mt-4 text-[11px] uppercase tracking-widest text-night-600">{{ optional($note->date)->format('j F Y') }}</p>
+                    <p class="mt-4 text-[11px] uppercase tracking-widest text-night-600">{{ optional($note->date)->translatedFormat('j F Y') }}</p>
                 </article>
             @endforeach
         @endif

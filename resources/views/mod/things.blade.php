@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="mx-auto max-w-2xl px-6 py-16">
-    <a href="{{ route('mod.' . $mood) }}" class="text-xs uppercase tracking-widest text-night-600 transition-colors hover:text-night-300">← MOD</a>
+    <a href="{{ route('mod.' . $mood) }}" class="text-xs uppercase tracking-widest text-night-600 transition-colors hover:text-night-300">← {{ __('admin.mod') }}</a>
     <h1 class="mt-4 font-serif text-4xl">{{ $text['mod_things_label'] }}</h1>
     <p class="mt-2 text-sm text-night-400">{{ $text['mod_things_page_sub'] }}</p>
 

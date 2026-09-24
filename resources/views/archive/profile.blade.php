@@ -1,12 +1,12 @@
 @extends('layouts.visitor')
 
-@section('title', 'Profile — ' . $siteName)
+@section('title', $text['archive_label_profile'] . ' — ' . $siteName)
 
 @section('content')
 <div class="mx-auto max-w-3xl px-6 py-16">
     <header class="mb-12">
         <a href="{{ route('home') }}" class="text-xs uppercase tracking-widest text-night-600 transition-colors hover:text-night-300">← {{ $siteName }}</a>
-        <h1 class="mt-4 font-serif text-4xl sm:text-5xl">Profile</h1>
+        <h1 class="mt-4 font-serif text-4xl sm:text-5xl">{{ $text['archive_label_profile'] }}</h1>
     </header>
 
     @if($profile)
@@ -34,14 +34,14 @@
 
             @if($profile->about)
                 <div class="mt-10 border-t border-night-700/60 pt-8">
-                    <h3 class="text-xs uppercase tracking-[0.25em] text-night-500">About her</h3>
+                    <h3 class="text-xs uppercase tracking-[0.25em] text-night-500">{{ __("text.about_her") }}</h3>
                     <p class="mt-4 whitespace-pre-line text-sm leading-relaxed text-night-300">{{ $profile->about }}</p>
                 </div>
             @endif
 
             @if($profile->favorites)
                 <div class="mt-10 border-t border-night-700/60 pt-8">
-                    <h3 class="text-xs uppercase tracking-[0.25em] text-night-500">Favorites</h3>
+                    <h3 class="text-xs uppercase tracking-[0.25em] text-night-500">{{ __("text.favorites_label") }}</h3>
                     <ul class="mt-4 grid grid-cols-1 gap-x-8 gap-y-2 text-sm text-night-300 sm:grid-cols-2">
                         @foreach($profile->favorites as $favorite)
                             <li class="flex items-baseline gap-2">
@@ -59,7 +59,7 @@
             @endif
         </div>
     @else
-        @include('archive.partials.empty', ['title' => 'The profile is resting.', 'message' => 'Come back later.'])
+        @include('archive.partials.empty', ['title' => __("text.empty_title"), 'message' => __("text.empty_message")])
     @endif
 </div>
 @endsection
